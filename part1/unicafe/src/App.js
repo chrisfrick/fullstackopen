@@ -9,11 +9,14 @@ const Display = ({ name, value }) => (
 )
 
 const Statistics = ({ good, neutral, bad}) => {
-   // calculate statistics
-   let all = good + neutral + bad
-   let average = ((good * 1) + (bad * -1))/all
-   let percentPositive = ((good / all) * 100) + "%"
+  // calculate statistics
+  let all = good + neutral + bad
+  let average = ((good * 1) + (bad * -1))/all
+  let percentPositive = ((good / all) * 100) + "%"
 
+  if (good === 0 && bad === 0 && neutral === 0) {
+    return <div>No feedback given</div>
+  }
   return (
     <div>
       <Display name="good" value={good}/>
