@@ -18,11 +18,14 @@ const Content = ({ parts }) => {
   )
 }
 
+
 const Course = ({ course }) => {
+  let totalExercises = course.parts.reduce((total, current) => total + current.exercises, 0)
   return (
     <div>
       <Header name={course.name} />
       <Content parts={course.parts} />
+      <p><strong>total of {totalExercises} exercises</strong></p>
     </div>
     
   )
