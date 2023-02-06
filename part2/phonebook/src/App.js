@@ -12,6 +12,10 @@ const App = () => {
 
   const addName = (event) => {
     event.preventDefault()
+    // Need to stringify objects because objects won't compare with ===
+    if (JSON.stringify(persons).includes(JSON.stringify(newName))) {
+      return alert(`${newName} is already added to the phonebook`)
+    }
     const personObject = { name: newName }
     setPersons(persons.concat(personObject))
     setNewName('')
