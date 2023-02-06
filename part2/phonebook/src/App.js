@@ -16,11 +16,19 @@ const App = () => {
 
   const addPerson = (event) => {
     event.preventDefault()
+    const personObject = { name: newName, number: newNumber}
     // Need to stringify objects because objects won't compare with ===
+    /* 
     if (JSON.stringify(persons).includes(JSON.stringify(newName))) {
       return alert(`${newName} is already added to the phonebook`)
     }
-    const personObject = { name: newName, number: newNumber}
+    */
+
+    // Let's try a slightly better design (to check if person already exists)
+    if (persons.some(person => person.name === personObject.name)) {
+      return alert(`${newName} is already added to the phonebook`)
+    }
+    
     setPersons(persons.concat(personObject))
     setNewName('')
     setNewNumber('')
