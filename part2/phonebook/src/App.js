@@ -4,7 +4,6 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import People from './components/People'
 
-
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
@@ -42,9 +41,13 @@ const App = () => {
       return alert(`${newName} is already added to the phonebook`)
     }
     
-    setPersons(persons.concat(personObject))
-    setNewName('')
+    axios
+      .post('http://localhost:3001/persons', personObject)
+      .then(response => {
+        setPersons(persons.concat(response.data))
+        setNewName('')
     setNewNumber('')
+      })
   }
 
   const personsToShow = 
