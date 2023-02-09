@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import axios from 'axios'
+import phonebookService from './services/phonebook'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import People from './components/People'
@@ -11,9 +11,9 @@ const App = () => {
   const [filter, setFilter] = useState('')
 
   useEffect(() => {
-    console.log('effect')
-    axios.get('http://localhost:3001/persons')
-    .then(response => setPersons(response.data))
+    phonebookService
+      .getAll()
+      .then(persons => setPersons(persons))
   }, [])
 
   const handleNameChange = (event) => 
@@ -41,18 +41,27 @@ const App = () => {
       return alert(`${newName} is already added to the phonebook`)
     }
     
-    axios
-      .post('http://localhost:3001/persons', personObject)
-      .then(response => {
-        setPersons(persons.concat(response.data))
+    phonebookService
+      .create(personObject)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
         setNewName('')
-    setNewNumber('')
+        setNewNumber('')
       })
   }
 
   const personsToShow = 
     filter === '' ? persons
     : persons.filter(person => person.name.toLowerCase().includes(filter.toLowerCase()))
+
+  const deletePerson = (person) => {
+    if (window.confirm(`Delete ${person.name}?`)) {
+      console.log(`delete ${person.id}`)
+      phonebookService
+        .remove(person.id)
+        .then(setPersons(persons.filter(p => p.id !== person.id)))
+    }
+  }
 
   return (
     <div>
@@ -72,7 +81,10 @@ const App = () => {
 
       <h2>Numbers</h2>
 
-      <People persons={personsToShow} />
+      <People
+        persons={personsToShow}
+        handleDelete={deletePerson}
+      />
       
     </div>
   )
