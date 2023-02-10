@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { useState, useEffect } from 'react'
 
-const CountryList = ({ countries, search }) => {
+const CountryList = ({ countries, search, handleShow}) => {
   if (search === '') return null
   if (countries.length > 10) {
     return (
@@ -13,7 +13,9 @@ const CountryList = ({ countries, search }) => {
   if (countries.length <= 10 && countries.length > 1) {
     return (
       <div>
-        {countries.map(country => <div key={country.name.common}>{country.name.common}</div>)}
+        {countries.map(country => (
+          <div key={country.name.common}>{country.name.common} <button onClick={() => handleShow(country)}>show</button></div>
+        ))}
       </div>
     )
   } 
@@ -75,6 +77,7 @@ const App = () => {
       <CountryList
         countries={countriesToShow}
         search={search}
+        handleShow={(country) => setSearch(country.name.common)}
       />
 
       <Country country={countriesToShow} />
