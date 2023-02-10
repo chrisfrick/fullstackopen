@@ -11,6 +11,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
   const [notification, setNotification] = useState(null)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     phonebookService
@@ -43,7 +44,6 @@ const App = () => {
         // create object for updated person with same info as original
         const updatedPerson = persons.find(p => p.name === personObject.name)
         // update to new number
-        console.log("updated object", updatedPerson)
         updatedPerson.number = personObject.number
         // update entry on server
         phonebookService
@@ -55,6 +55,13 @@ const App = () => {
             setNotification(`updated ${updatedPerson.name}`)
             setTimeout(() => {
               setNotification(null)
+            }, 5000)
+          })
+          .catch(error => {
+            setError(`${updatedPerson.name} has already been removed from the server`)
+            setPersons(persons.filter(p => p.id !== updatedPerson.id))
+            setTimeout(() => {
+              setError(null)
             }, 5000)
           })
         return
@@ -91,7 +98,8 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
 
-      <Notification message={notification} />
+      <Notification message={notification} color='success' />
+      <Notification message={error} color='error'/>
 
       <Filter handleFilter={handleFilter} />
 

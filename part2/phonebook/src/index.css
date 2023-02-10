@@ -1,6 +1,6 @@
 .notification {
     border: solid 5px;
-    border-radius: 3px;
+    border-radius: 5px;
     background-color: lightgrey;
     padding: 10px;
     margin: 10px;
@@ -10,4 +10,9 @@
 .success {
     color: green;
     border-color: green;
+}
+
+.error {
+    color: red;
+    border-color: red;
 }
