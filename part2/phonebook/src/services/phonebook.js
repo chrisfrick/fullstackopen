@@ -16,6 +16,11 @@ const remove = id => {
     return request.then(response => response.data)
 }
 
-let phonebookService = { getAll, create, remove }
+const update = changedPerson => {
+    const request = axios.put(`${baseUrl}/${changedPerson.id}`, changedPerson)
+    return request.then(response => response.data)
+}
+
+let phonebookService = { getAll, create, remove, update }
 
 export default phonebookService

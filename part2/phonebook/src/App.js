@@ -35,10 +35,25 @@ const App = () => {
       return alert(`${newName} is already added to the phonebook`)
     }
     */
-
     // Let's try a slightly better design (to check if person already exists)
     if (persons.some(person => person.name === personObject.name)) {
-      return alert(`${newName} is already added to the phonebook`)
+      if (window.confirm(`${newName} is already added to the phonebook. Replace the old number with a new one?`)) {
+        // create object for updated person with same info as original
+        const updatedPerson = persons.find(p => p.name === personObject.name)
+        // update to new number
+        console.log("updated object", updatedPerson)
+        updatedPerson.number = personObject.number
+        // update entry on server
+        phonebookService
+          .update(updatedPerson)
+          .then(returnedPerson => {
+            setPersons(persons.map (p => p.id =
+              personObject.id ? personObject 
+              : p))
+          })
+        return
+      }
+      else return
     }
     
     phonebookService
@@ -56,7 +71,6 @@ const App = () => {
 
   const deletePerson = (person) => {
     if (window.confirm(`Delete ${person.name}?`)) {
-      console.log(`delete ${person.id}`)
       phonebookService
         .remove(person.id)
         .then(setPersons(persons.filter(p => p.id !== person.id)))
