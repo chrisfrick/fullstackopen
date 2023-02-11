@@ -22,21 +22,45 @@ const CountryList = ({ countries, search, handleShow}) => {
   return null
 }
 
+const Weather = ({ country }) => {
+  const [weather, setWeather] = useState(null)
+  useEffect (() => {
+      axios
+      .get(`https://api.openweathermap.org/data/2.5/weather?q=${country.capital},${country.name.common}&appid=${process.env.REACT_APP_API_KEY}&units=imperial`)
+      .then(response => setWeather(response.data))
+      .catch(error => alert("error"))
+  }, [country])
+  if (!weather) return null
+  return (
+    <div>
+      <div>temperature: {weather.main.temp} Fahrenheit</div>
+      <div>{weather.weather[0].description}</div>
+      <img
+        src={`http://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
+        alt={weather.weather[0].description}
+      />
+      <div>wind: {weather.wind.speed} mph</div>
+    </div>
+  )
+}
+
 const Country = ({ country }) => {
   if (country.length !== 1) return null
   country = country[0]
-  console.log(country)
+
   return (
     <div>
       <h1>{country.name.common}</h1>
-      <div>capital {country.capital}</div>
-      <div>area {country.area}</div>
+      <div>capital: {country.capital}</div>
+      <div>area: {country.area}</div>
 
-      <h2>languages:</h2>
+      <h2>Languages:</h2>
       <ul>
         {Object.values(country.languages).map(lang => <li key={lang}>{lang}</li>)}
       </ul>
       <img src={country.flags.png} alt={`flag of ${country.name.common}`}></img>
+      <h2>Weather in {country.capital}</h2>
+      <Weather country={country} />
     </div>
   )
 }
