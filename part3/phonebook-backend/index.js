@@ -3,7 +3,20 @@ const morgan = require('morgan')
 const app = express()
 
 app.use(express.json())
-app.use(morgan('tiny'))
+morgan.token('data', (req, res) => JSON.stringify(req.body))
+app.use(morgan((tokens, req, res) => {
+  const log = [
+    tokens.method(req, res),
+    tokens.url(req, res),
+    tokens.status(req, res),
+    tokens.res(req, res, 'content-length'), '-',
+    tokens['response-time'](req, res), 'ms'
+  ]
+  if (tokens.method(req, res) == 'POST') {
+    log.push(tokens.data(req, res))
+  }
+  return log.join(' ')
+}))
 
 let persons = [
     { 
@@ -80,6 +93,10 @@ app.post('/api/persons', (request, response) => {
 
   response.json(person)
 })
+
+
+app.use(morgan(':data'))
+
 
 const PORT = 3001
 app.listen(PORT, () => {
