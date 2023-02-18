@@ -65,6 +65,10 @@ app.get('/info', (request, response) => {
 })
 
 app.get('/api/persons/:id', (request, response) => {
+  Person.findById(request.params.id).then(person => {
+    response.json(person)
+  })
+  /*
   const id = Number(request.params.id)
   const person = persons.find(person => person.id === id)
   if (person) {
@@ -72,6 +76,7 @@ app.get('/api/persons/:id', (request, response) => {
   } else {
     response.status(404).end()
   }
+  */
 })
 
 app.delete('/api/persons/:id', (request, response) => {
@@ -86,22 +91,23 @@ app.post('/api/persons', (request, response) => {
     return response.status(400).json({
       error: 'content missing'
     })
-  } else if ((persons.map(p => p.name)).includes(body.name)) {
+  } 
+  /*
+  else if ((persons.map(p => p.name)).includes(body.name)) {
     return response.status(400).json({
       error: 'name must be unique'
     })
   }
+  */
 
-  const id = Math.floor(Math.random() * 10000)
-  const person = {
-    id: id,
+  const person = new Person({
     name: body.name,
     number: body.number,
-  }
+  })
 
-  persons = persons.concat(person)
-
-  response.json(person)
+  person.save().then(savedPerson => {
+    response.json(savedPerson)
+  })
 })
 
 
