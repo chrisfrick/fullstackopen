@@ -24,6 +24,7 @@ app.use(morgan((tokens, req, res) => {
   return log.join(' ')
 }))
 
+// Info page
 app.get('/info', (request, response) => {
   Person.find({}).then(people => {
     response.send(`
