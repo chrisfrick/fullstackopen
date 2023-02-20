@@ -24,14 +24,6 @@ app.use(morgan((tokens, req, res) => {
   return log.join(' ')
 }))
 
-app.get('/api/persons', (request, response) => {
-    Person.find({}).then(people => {
-      response.json(people)
-    })
-})
-
-// const entries = persons.length
-
 app.get('/info', (request, response) => {
   Person.find({}).then(people => {
     response.send(`
@@ -39,6 +31,12 @@ app.get('/info', (request, response) => {
       <p>${new Date()}</p>
     `)
   })
+})
+
+app.get('/api/persons', (request, response) => {
+    Person.find({}).then(people => {
+      response.json(people)
+    })
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
@@ -53,14 +51,6 @@ app.get('/api/persons/:id', (request, response, next) => {
     .catch(error => next(error))
 })
 
-app.delete('/api/persons/:id', (request, response, next) => {
-  Person.findByIdAndRemove(request.params.id)
-    .then(result => {
-      response.status(204).end()
-    })
-    .catch(error => next(error))
-})
-
 app.post('/api/persons', (request, response) => {
   const body = request.body
   if (!body.name || !body.number) {
@@ -68,13 +58,6 @@ app.post('/api/persons', (request, response) => {
       error: 'content missing'
     })
   } 
-  /*
-  else if ((persons.map(p => p.name)).includes(body.name)) {
-    return response.status(400).json({
-      error: 'name must be unique'
-    })
-  }
-  */
 
   const person = new Person({
     name: body.name,
@@ -86,6 +69,29 @@ app.post('/api/persons', (request, response) => {
   })
 })
 
+app.delete('/api/persons/:id', (request, response, next) => {
+  Person.findByIdAndRemove(request.params.id)
+    .then(result => {
+      response.status(204).end()
+    })
+    .catch(error => next(error))
+})
+
+app.put('/api/persons/:id', (request, response, next) => {
+  const body = request.body
+
+  const person = {
+    name: body.name,
+    number: body.number,
+  }
+
+  Person.findByIdAndUpdate(request.params.id, person, { new: true })
+    .then(updatedPerson => {
+      console.log(updatedPerson)
+      response.json(updatedPerson)
+    })
+    .catch(error => next(error))
+})
 
 app.use(morgan(':data'))
 
