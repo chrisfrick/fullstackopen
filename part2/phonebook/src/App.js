@@ -68,7 +68,7 @@ const App = () => {
       }
       else return
     }
-    
+    debugger
     phonebookService
       .create(personObject)
       .then(returnedPerson => {
@@ -80,6 +80,14 @@ const App = () => {
           setNotification(null)
         }, 5000)
       })
+      .catch(error => {
+        console.log(error.response)
+        setError(error.response.data.error)
+        setTimeout(() => {
+          setError(null)
+        }, 5000)
+      })
+      
   }
 
   const personsToShow = 
