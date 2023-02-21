@@ -58,8 +58,8 @@ const App = () => {
             }, 5000)
           })
           .catch(error => {
-            setError(`${updatedPerson.name} has already been removed from the server`)
-            setPersons(persons.filter(p => p.id !== updatedPerson.id))
+            console.log(error.response)
+            setError(error.response.data.error)
             setTimeout(() => {
               setError(null)
             }, 5000)
