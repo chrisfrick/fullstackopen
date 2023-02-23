@@ -18,7 +18,7 @@ app.use(morgan((tokens, req, res) => {
     tokens.res(req, res, 'content-length'), '-',
     tokens['response-time'](req, res), 'ms'
   ]
-  if (tokens.method(req, res) == 'POST') {
+  if (tokens.method(req, res) === 'POST') {
     log.push(tokens.data(req, res))
   }
   return log.join(' ')
@@ -35,9 +35,9 @@ app.get('/info', (request, response) => {
 })
 
 app.get('/api/persons', (request, response) => {
-    Person.find({}).then(people => {
-      response.json(people)
-    })
+  Person.find({}).then(people => {
+    response.json(people)
+  })
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
@@ -58,7 +58,7 @@ app.post('/api/persons', (request, response, next) => {
     return response.status(400).json({
       error: 'content missing'
     })
-  } 
+  }
 
   const person = new Person({
     name: body.name,
@@ -106,7 +106,7 @@ const errorHandler = (error, request, response, next) => {
   console.error(error.message)
 
   if (error.name === 'CastError') {
-    return response.status(400).send({ error: 'malformatted id'})
+    return response.status(400).send({ error: 'malformatted id' })
   } else if (error.name === 'ValidationError') {
     return response.status(400).json({ error: error.message })
   }
@@ -118,5 +118,5 @@ app.use(errorHandler)
 
 const PORT = process.env.PORT
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
+  console.log(`Server running on port ${PORT}`)
 })
