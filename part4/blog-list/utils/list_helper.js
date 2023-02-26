@@ -1,3 +1,6 @@
+const countBy = require('lodash').countBy
+const reduce = require('lodash').reduce
+
 const dummy = (blogs) => {
   return 1
 }
@@ -19,8 +22,30 @@ const favoriteBlog = (blogs) => {
   return result
 }
 
+const mostBlogs = (blogs) => {
+  if (blogs.length === 0) return {}
+  let blogCounts = countBy(blogs, (blog) => blog.author)
+  console.log(blogCounts)
+  const mostBlogs = reduce(blogCounts, (most, currentVal, key) => {
+    if (most === { author: 'none', blogs: 0 }) {
+      return {
+        author: key,
+        blogs: currentVal
+      }
+  } else if (currentVal > most.blogs) {
+    return {
+      author: key,
+      blogs: currentVal
+    } 
+  } else return most
+  }, { author: 'none', blogs: 0 })
+  console.log(mostBlogs)
+  return mostBlogs
+}
+
 module.exports = {
   dummy,
   totalLikes,
-  favoriteBlog
+  favoriteBlog,
+  mostBlogs,
 }
