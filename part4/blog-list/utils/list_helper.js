@@ -25,22 +25,35 @@ const favoriteBlog = (blogs) => {
 const mostBlogs = (blogs) => {
   if (blogs.length === 0) return {}
   let blogCounts = countBy(blogs, (blog) => blog.author)
-  console.log(blogCounts)
   const mostBlogs = reduce(blogCounts, (most, currentVal, key) => {
     if (most === { author: 'none', blogs: 0 }) {
-      return {
-        author: key,
-        blogs: currentVal
-      }
+      return { author: key, blogs: currentVal }
   } else if (currentVal > most.blogs) {
-    return {
-      author: key,
-      blogs: currentVal
-    } 
+    return { author: key, blogs: currentVal } 
   } else return most
   }, { author: 'none', blogs: 0 })
-  console.log(mostBlogs)
   return mostBlogs
+}
+
+const mostLikes = (blogs) => {
+  if (blogs.length === 0) return {}
+  let likesCount = {}
+  for (let blog in blogs) {
+    const { author, likes } = blogs[blog]
+    if (Object.keys(likesCount).includes(author)) {
+      likesCount[author] += likes
+    } else {
+      likesCount[author] = likes
+    }
+  }
+  const mostLikes = reduce(likesCount, (most, currentVal, key) => {
+    if (most === { author: 'none', likes: 0 }) {
+      return { author: key, likes: currentVal }
+  } else if (currentVal > most.likes) {
+    return { author: key, likes: currentVal } 
+  } else return most
+  }, { author: 'none', likes: 0 })
+  return mostLikes
 }
 
 module.exports = {
@@ -48,4 +61,5 @@ module.exports = {
   totalLikes,
   favoriteBlog,
   mostBlogs,
+  mostLikes,
 }
