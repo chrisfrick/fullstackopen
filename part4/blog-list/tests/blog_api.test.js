@@ -29,8 +29,27 @@ test('correct number of blogs are returned', async () => {
 
 test('unique identifier property is named "id"', async () => {
   const response = await api.get('/api/blogs')
-  console.log(response.body[0])
   expect(response.body[0].id).toBeDefined()
+})
+
+test('a valid blog can be added', async () => {
+  const newBlog = {
+    title: "New Blog",
+    author: "Bloggy McBlogface",
+    url: "http://blog.blog.blog",
+    likes: 42,
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+  blogsAtEnd.forEach(blog => delete blog.id)
+  expect(blogsAtEnd).toContainEqual(newBlog)
 })
 
 afterAll(async () => {
