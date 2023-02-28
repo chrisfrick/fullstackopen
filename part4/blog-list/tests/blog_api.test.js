@@ -74,6 +74,32 @@ test('missing likes property defaults to the value 0', async () => {
   expect(blogsAtEnd).toContainEqual(newBlogWithNoLikes)
 })
 
+test('missing title returns status code 400', async () => {
+  const newBlog = {
+    author: "Bloggy McBlogface",
+    url: "http://blog.blog.blog",
+    likes: 42,
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+})
+
+test('missing url returns status code 400', async () => {
+  const newBlog = {
+    title: "New Blog",
+    author: "Bloggy McBlogface",
+    likes: 0,
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(400)
+})
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
