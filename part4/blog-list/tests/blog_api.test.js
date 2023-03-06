@@ -3,12 +3,41 @@ const supertest = require('supertest')
 const helper = require('./test_helper')
 const app = require('../app')
 const api = supertest(app)
+const bcrypt = require('bcrypt')
+const userExtractor = require('../utils/middleware').userExtractor
 
+const User = require('../models/user.js')
 const Blog = require('../models/blog')
 
+let token = ''
+
+beforeAll(async () => {
+  await User.deleteMany({})
+
+  const newUser = {
+    name: 'Superuser',
+    username: 'root',
+    password: 'secret'
+  }
+
+  await api
+    .post('/api/users')
+    .send(newUser)
+
+  const response = await api
+    .post('/api/login')
+    .send({ username: newUser.username, password: newUser.password})
+  
+  token = response.body.token
+
+  console.log(token)
+})
+
 beforeEach(async () => {
+
   await Blog.deleteMany({})
   await Blog.insertMany(helper.initialBlogs)
+
 })
 
 describe('when blogs are initially in the database', () => {
@@ -41,13 +70,17 @@ describe('adding a blog', () => {
   
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
   
     const blogsAtEnd = await helper.blogsInDb()
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
-    blogsAtEnd.forEach(blog => delete blog.id)
+    blogsAtEnd.forEach(blog => {
+      delete blog.id
+      delete blog.user
+    })
     expect(blogsAtEnd).toContainEqual(newBlog)
   })
 
@@ -60,10 +93,16 @@ describe('adding a blog', () => {
   
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
   
     const blogsAtEnd = await helper.blogsInDb()
-    blogsAtEnd.forEach(blog => delete blog.id)
+    blogsAtEnd.forEach(blog => {
+      delete blog.id
+      delete blog.user
+    })
     const newBlogWithNoLikes = {
       title: "New Blog",
       author: "Bloggy McBlogface",
@@ -82,6 +121,7 @@ describe('adding a blog', () => {
   
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(400)
   })
@@ -95,21 +135,59 @@ describe('adding a blog', () => {
   
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
       .send(newBlog)
       .expect(400)
+  })
+
+  test('fails with status code 401 if token is not provided', async () => {
+    const blogsAtStart = await helper.blogsInDb
+    const newBlog = {
+      title: "New Blog",
+      author: "Bloggy McBlogface",
+      url: "http://blog.blog.blog",
+      likes: 42,
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(401)
+    
+      const blogsAtEnd = await helper.blogsInDb
+      expect(blogsAtEnd.length).toEqual(blogsAtStart.length)
   })
 })
 
 describe('deleting a blog post', () => {
+  beforeEach(async () => {
+    await Blog.deleteMany({})
+
+    const newBlog = {
+      title: "New Blog",
+      author: "Bloggy McBlogface",
+      url: "http://blog.blog.blog",
+      likes: 42,
+    }
+
+    await api
+      .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+  })
+
   test('succeeds with status code 204 if id is valid', async () => {
     const blogsAtStart = await helper.blogsInDb()
     await api
       .delete(`/api/blogs/${blogsAtStart[0].id}`)
+      .set('Authorization', `Bearer ${token}`)
       .expect(204)
     
     const blogsAfterDelete = await helper.blogsInDb()
     expect(blogsAfterDelete).toHaveLength(blogsAtStart.length - 1)
-  
+    
     expect(blogsAfterDelete).not.toContainEqual(blogsAtStart[0])
   })
 })
