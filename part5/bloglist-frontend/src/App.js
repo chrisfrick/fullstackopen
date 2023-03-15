@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import loginService from './services/login'
+import Notification from './components/Notification'
+
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -11,6 +13,8 @@ const App = () => {
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
+  const [notification, setNotification] = useState(null)
+  const [notificationType, setNotificationType] = useState(null)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -41,7 +45,12 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      alert('Wrong credentials')
+      setNotification('incorrect username or password')
+      setNotificationType('error')
+      setTimeout(() => {
+        setNotification(null)
+        setNotificationType(null)
+      }, 5000)
     } 
   }
 
@@ -100,6 +109,13 @@ const App = () => {
     setNewTitle('')
     setNewAuthor('')
     setNewUrl('')
+
+    setNotification(`a new blog ${newBlog.title} sucessfully added`)
+    setNotificationType('success')
+    setTimeout(() => {
+      setNotification(null)
+      setNotificationType(null)
+    }, 5000)
   }
 
   const blogForm = () => (
@@ -139,16 +155,16 @@ const App = () => {
     return (
       <div>
         <h2>Log in to application</h2>
+        <Notification message={notification} color={notificationType} />
         {loginForm()}
       </div>
     )
   }
 
-  
-
   return (
     <div>
       <h2>blogs</h2>
+      <Notification message={notification} color={notificationType} />
       <div>
         <div>
           {user.name} logged in
