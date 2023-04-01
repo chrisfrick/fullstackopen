@@ -22,10 +22,12 @@ blogRouter.post('/', userExtractor, async (request, response) => {
     user: user.id,
   })
 
-  const savedBlog = await blog.save()
+  let savedBlog = await blog.save()
+  console.log('before populate', savedBlog)
+  savedBlog = await savedBlog.populate('user')
+  console.log('after popoulate', savedBlog)
   user.blogs = user.blogs.concat(savedBlog._id)
   await user.save()
-
   response.status(201).json(savedBlog)
 })
 
@@ -45,11 +47,20 @@ blogRouter.delete('/:id', userExtractor, async (request, response) => {
 })
 
 blogRouter.put('/:id', async (request, response) => {
-  const blog = request.body
+  const body = request.body
+  console.log(body)
+  const blog = {
+    user: body.user.id,
+    ttle: body.title,
+    author: body.author,
+    likes: body.likes,
+    url: body.url,
+  }
   const updatedBlog = await Blog.findByIdAndUpdate(
-    request.params.id, blog, { new: true})
+    request.params.id, blog, { new: true }).populate('user')
+  console.log(updatedBlog)
   response.json(updatedBlog)
-
+  
 })
 
 module.exports = blogRouter

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-const Blog = ({blog}) => {
+const Blog = ({ blog, handleLike }) => {
   const [expanded, setExpanded] = useState(false)
 
   const toggleExpanded = () => setExpanded(!expanded)
@@ -19,7 +19,7 @@ const Blog = ({blog}) => {
         {blog.url}
       </div>
       <div>
-        likes {blog.likes} <button>like</button>
+        likes {blog.likes} <button onClick={handleLike}>like</button>
       </div>
       <div>
         {blog.user.name}
