@@ -25,6 +25,14 @@ const update = async (id, newObject) => {
   return response.data
 }
 
+const remove = async (id) => {
+  const config = {
+    headers: { Authorization: token }
+  }
+  const response = await axios.delete(`${baseUrl}/${id}`, config)
+  return response.data
+}
+
 // eslint-disable-next-line import/no-anonymous-default-export
-const blogService = { setToken, getAll, create, update, }
+const blogService = { setToken, getAll, create, update, remove }
 export default blogService

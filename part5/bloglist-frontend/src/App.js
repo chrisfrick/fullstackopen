@@ -89,10 +89,17 @@ const App = () => {
   
   const handleLike = async (id) => {
     const blog = blogs.find(b => b.id === id)
-    console.log(blog)
+    console.log(user, blog)
     const updatedBlog = { ...blog, likes: blog.likes + 1, user: blog.user.id }
     const returnedBlog = await blogService.update(id.toString(), updatedBlog)
     setBlogs(blogs.map(blog => blog.id !== id ? blog : returnedBlog))
+  }
+
+  const handleRemove = async (blog) => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      await blogService.remove(blog.id.toString())
+      setBlogs(blogs.filter(b => b.id !== blog.id.toString()))
+    } 
   }
 
   const addBlog = async (blogObject) => {
@@ -140,7 +147,13 @@ const App = () => {
         </div>
         <div>
           {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} handleLike={() => handleLike(blog.id)} />
+            <Blog
+              key={blog.id}
+              blog={blog}
+              username={user.username}
+              handleLike={() => handleLike(blog.id)}
+              handleRemove={() => handleRemove(blog)}
+            />
           )}
         </div>
         
