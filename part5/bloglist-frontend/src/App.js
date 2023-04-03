@@ -21,7 +21,7 @@ const App = () => {
       ))
       setBlogs( sortedBlogs )
     }
-    )  
+    )
   }, [])
 
   useEffect(() => {
@@ -54,7 +54,7 @@ const App = () => {
         setNotification(null)
         setNotificationType(null)
       }, 5000)
-    } 
+    }
   }
 
   const handleLogout = () => {
@@ -67,7 +67,7 @@ const App = () => {
     <form onSubmit={handleLogin}>
       <div>
         username
-          <input
+        <input
           type="text"
           value={username}
           name="Username"
@@ -76,7 +76,7 @@ const App = () => {
       </div>
       <div>
         password
-          <input
+        <input
           type="password"
           value={password}
           name="Password"
@@ -86,7 +86,7 @@ const App = () => {
       <button type="submit">login</button>
     </form>
   )
-  
+
   const handleLike = async (id) => {
     const blog = blogs.find(b => b.id === id)
     console.log(user, blog)
@@ -99,7 +99,7 @@ const App = () => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
       await blogService.remove(blog.id.toString())
       setBlogs(blogs.filter(b => b.id !== blog.id.toString()))
-    } 
+    }
   }
 
   const addBlog = async (blogObject) => {
@@ -116,13 +116,13 @@ const App = () => {
   }
 
   const blogFormRef = useRef()
-  
+
   const blogForm = () => (
     <Togglable buttonLabel="new blog" ref={blogFormRef}>
       <BlogForm createBlog={addBlog} />
     </Togglable>
   )
-  
+
   if (user === null) {
     return (
       <div>
@@ -156,7 +156,6 @@ const App = () => {
             />
           )}
         </div>
-        
       </div>
     </div>
   )

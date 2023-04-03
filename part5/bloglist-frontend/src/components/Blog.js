@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import PropTypes from 'prop-types'
 
 const Blog = ({ blog, username, handleLike, handleRemove }) => {
   const [expanded, setExpanded] = useState(false)
@@ -13,7 +14,7 @@ const Blog = ({ blog, username, handleLike, handleRemove }) => {
   if (expanded) return (
     <div style={blogStyle}>
       <div>
-      {blog.title} {blog.author} <button onClick={toggleExpanded}>hide</button>
+        {blog.title} {blog.author} <button onClick={toggleExpanded}>hide</button>
       </div>
       <div>
         {blog.url}
@@ -28,15 +29,21 @@ const Blog = ({ blog, username, handleLike, handleRemove }) => {
         ? <button onClick={handleRemove}>remove</button>
         : null
       }
-      
-    </div>  
+    </div>
   )
 
   return (
     <div style={blogStyle}>
       {blog.title} {blog.author} <button onClick={toggleExpanded}>view</button>
-    </div>  
+    </div>
   )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  username: PropTypes.string.isRequired,
+  handleLike: PropTypes.func.isRequired,
+  handleRemove: PropTypes.func.isRequired
 }
 
 export default Blog
