@@ -16,10 +16,10 @@ const Blog = ({ blog, username, handleLike, handleRemove }) => {
       <div>
         {blog.title} {blog.author} <button onClick={toggleExpanded}>hide</button>
       </div>
-      <div>
+      <div className='url'>
         {blog.url}
       </div>
-      <div>
+      <div className='likes'>
         likes {blog.likes} <button onClick={handleLike}>like</button>
       </div>
       <div>
