@@ -13710,3 +13710,7 @@ part3/phonebook-backend/node_modules/yocto-queue/index.js
 part3/phonebook-backend/node_modules/yocto-queue/license
 part3/phonebook-backend/node_modules/yocto-queue/package.json
 part3/phonebook-backend/node_modules/yocto-queue/readme.md
+part4/blog-list/node_modules
+part4/blog-list/.env
+part3/part3a-notes/
+part2/part2-notes/
