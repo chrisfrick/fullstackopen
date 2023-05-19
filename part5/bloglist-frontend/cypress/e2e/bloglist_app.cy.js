@@ -37,4 +37,21 @@ describe('Blog app', function() {
       cy.get('html').should('not.contain', 'Test User logged in')
     })
   })
+
+  describe('When logged in', function() {
+    beforeEach(function() {
+      cy.login({ username: 'tester', password: 'secret' })
+    })
+
+    it('A blog can be created', function() {
+      cy.contains('new blog').click()
+      cy.get('#title').type('A New Blog')
+      cy.get('#author').type('Blogger McBlogface')
+      cy.get('#url').type('http://blog.blog.blog')
+      cy.get('#blog-submit-button').click()
+
+      cy.contains('a new blog A New Blog successfully added')
+      cy.contains('A New Blog Blogger McBlogface')
+    })
+  })
 })
