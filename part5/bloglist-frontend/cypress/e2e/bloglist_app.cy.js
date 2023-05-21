@@ -53,5 +53,25 @@ describe('Blog app', function() {
       cy.contains('a new blog A New Blog successfully added')
       cy.contains('A New Blog Blogger McBlogface')
     })
+
+    describe('and a blog exists', function() {
+      beforeEach(function() {
+        cy.createBlog({
+          title: 'A New Blog',
+          author: 'Blogger McBlogface',
+          url: 'http://blog.blog.blog'
+        })
+      })
+
+      it('User can like a blog', function() {
+        cy.contains('A New Blog Blogger McBlogface')
+          .contains('view')
+          .click()
+
+        cy.contains('likes 0')
+        cy.contains('like').click()
+        cy.contains('likes 1')
+      })
+    })
   })
 })
