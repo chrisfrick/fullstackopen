@@ -100,5 +100,63 @@ describe('Blog app', function() {
         cy.contains('remove').should('not.exist')
       })
     })
+
+    describe('and many blogs exist', function() {
+      beforeEach(function() {
+        cy.createBlog({
+          title: 'The title with the second most likes',
+          author: 'Second Most Liked',
+          url: 'http://blog.SecondMost.liked'
+        })
+        cy.createBlog({
+          title: 'The title with the third most likes',
+          author: 'Third Most Liked',
+          url: 'http://blog.SecondMost.liked'
+        })
+        cy.createBlog({
+          title: 'The title with the most likes',
+          author: 'Most Liked',
+          url: 'http://blog.most.liked'
+        })
+      })
+
+      it('blogs are correctly ordered by most to least likes', function() {
+        // Like first blog twice
+        cy.contains('The title with the most likes')
+          .contains('view')
+          .click()
+        cy.contains('likes 0')
+          .find('.like-button')
+          .click()
+        cy.contains('likes 1')
+          .find('.like-button')
+          .click()
+        cy.contains('likes 2')
+
+        // Like second blog once
+        cy.contains('The title with the second most likes')
+          .contains('view')
+          .click()
+        cy.contains('likes 0')
+          .find('.like-button')
+          .click()
+        cy.contains('likes 1')
+
+        cy.visit('http://localhost:3000')
+        cy.contains('The title with the most likes')
+          .contains('view')
+          .click()
+        cy.contains('The title with the second most likes')
+          .contains('view')
+          .click()
+        cy.contains('The title with the third most likes')
+          .contains('view')
+          .click()
+
+        cy.get('.blog').eq(0).should('contain', 'The title with the most likes')
+        cy.get('.blog').eq(1).should('contain', 'The title with the second most likes')
+        cy.get('.blog').eq(2).should('contain', 'The title with the third most likes')
+      })
+    })
   })
 })
