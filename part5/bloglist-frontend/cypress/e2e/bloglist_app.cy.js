@@ -81,6 +81,24 @@ describe('Blog app', function() {
         cy.contains('remove').click()
         cy.get('html').should('not.contain', 'A New Blog Blogger McBlogface')
       })
+
+      it('Another user who did NOT create the blog cannot see the delete button', function() {
+        // Create second user and login
+        const user = {
+          name: 'Second User',
+          username: 'seconduser',
+          password: 'secondsecret'
+        }
+        cy.request('POST', 'http://localhost:3003/api/users/', user)
+        cy.login({ username: 'seconduser', password: 'secondsecret' })
+
+        cy.contains('Second User logged in')
+        cy.contains('A New Blog Blogger McBlogface')
+          .contains('view')
+          .click()
+
+        cy.contains('remove').should('not.exist')
+      })
     })
   })
 })
