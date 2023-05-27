@@ -1,7 +1,7 @@
 import { filterChange } from '../reducers/filterReducer'
 import { useDispatch } from 'react-redux'
 
-const VisibilityFilter = (propr) => {
+const VisibilityFilter = (props) => {
   const dispatch = useDispatch()
 
   return (
