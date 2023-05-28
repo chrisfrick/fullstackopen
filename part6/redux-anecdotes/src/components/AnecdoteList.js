@@ -17,10 +17,7 @@ const Anecdote = ({ anecdote, handleClick }) => {
 
 const AnecdoteList = () => {
   const anecdotes = useSelector(({ filter, anecdotes }) => {
-    console.log(filter.content)
-    if (filter === 'ALL') {
-      return anecdotes
-    }
+    console.log(filter)
     return anecdotes.filter(a => a.content.includes(filter))
   })
   const dispatch = useDispatch()
