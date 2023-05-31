@@ -10,7 +10,9 @@ const App = () => {
     console.log('vote')
   }
 
-  const result = useQuery('anecdotes', getAnecdotes)
+  const result = useQuery('anecdotes', getAnecdotes, {
+    refetchOnWindowFocus: false
+  })
 
   if ( result.isLoading ) {
     return <div>loading data...</div>
