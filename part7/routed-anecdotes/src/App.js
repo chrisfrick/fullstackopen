@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import {
-  Routes, Route, Link, useMatch
+  Routes, Route, Link, useMatch, useNavigate
 } from 'react-router-dom'
 
 const Menu = () => {
@@ -61,20 +61,24 @@ const Footer = () => (
   </div>
 )
 
-const CreateNew = (props) => {
+const CreateNew = ({ addNew, setNotification }) => {
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
 
+  const navigate = useNavigate()
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    props.addNew({
+    addNew({
       content,
       author,
       info,
       votes: 0
     })
+    navigate('/')
+    setNotification(`a new anecdote ${content} was successfully created`)
+    setTimeout(() => setNotification(''), 5000)
   }
 
   return (
@@ -147,11 +151,11 @@ const App = () => {
     <div>
         <h1>Software anecdotes</h1>
         <Menu />
-
+        <div>{notification}</div>
         <Routes>
           <Route path="/anecdotes/:id" element={<Anecdote anecdote={anecdote} />} />
           <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
-          <Route path="/create" element={<CreateNew addNew={addNew} />} />
+          <Route path="/create" element={<CreateNew addNew={addNew} setNotification={setNotification}/>} />
           <Route path="about" element={<About />} />
         </Routes>
         
