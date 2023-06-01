@@ -71,7 +71,6 @@ const CreateNew = ({ addNew, setNotification }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log(author)
     addNew({
       content: content.value,
       author: author.value,
@@ -81,6 +80,13 @@ const CreateNew = ({ addNew, setNotification }) => {
     navigate('/')
     setNotification(`a new anecdote ${content.value} was successfully created`)
     setTimeout(() => setNotification(''), 5000)
+  }
+
+  const handleReset = (e) => {
+    e.preventDefault()
+    content.reset()
+    author.reset()
+    info.reset()
   }
 
   return (
@@ -100,6 +106,7 @@ const CreateNew = ({ addNew, setNotification }) => {
           <input {...info} />
         </div>
         <button>create</button>
+        <button onClick={handleReset}>reset</button>
       </form>
     </div>
   )
