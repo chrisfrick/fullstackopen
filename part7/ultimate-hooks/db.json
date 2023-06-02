@@ -7,6 +7,14 @@
     {
       "id": 2,
       "content": "best feature ever <3"
+    },
+    {
+      "content": "new",
+      "id": 3
+    },
+    {
+      "content": "new note",
+      "id": 4
     }
   ],
   "persons": [
@@ -19,6 +27,11 @@
       "id": 2,
       "name": "Tarja Halonen",
       "number": "040-2223334"
+    },
+    {
+      "name": "name",
+      "number": "number",
+      "id": 3
     }
   ]
 }
