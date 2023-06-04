@@ -15,13 +15,13 @@ describe('<Blog />', () => {
       url: 'http://blog.blog.com',
       likes: 42,
       user: {
-        name: 'test user'
-      }
+        name: 'test user',
+      },
     }
 
     mockHandler = jest.fn()
 
-    container = render(<Blog blog={blog} handleLike={mockHandler}/>).container
+    container = render(<Blog blog={blog} handleLike={mockHandler} />).container
   })
 
   test('renders title and author, not url or likes by default', () => {

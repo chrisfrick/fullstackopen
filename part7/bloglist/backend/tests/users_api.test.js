@@ -10,10 +10,10 @@ const User = require('../models/user.js')
 describe('when there is initially one user in the db', () => {
   beforeEach(async () => {
     await User.deleteMany({})
-    
+
     const passwordHash = await bcrypt.hash('secret', 10)
-    const user = new User({ username: 'root', passwordHash})
-  
+    const user = new User({ username: 'root', passwordHash })
+
     await user.save()
   })
 
@@ -31,11 +31,11 @@ describe('when there is initially one user in the db', () => {
       .send(newUser)
       .expect(201)
       .expect('Content-Type', /application\/json/)
-    
+
     const usersAtEnd = await helper.usersInDb()
     expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
 
-    const usernames = usersAtEnd.map(u => u.username)
+    const usernames = usersAtEnd.map((u) => u.username)
     expect(usernames).toContain(newUser.username)
   })
 
@@ -65,7 +65,7 @@ describe('when there is initially one user in the db', () => {
 
     const newUser = {
       name: 'New User',
-      password: 'secret'
+      password: 'secret',
     }
 
     const result = await api
@@ -94,11 +94,10 @@ describe('when there is initially one user in the db', () => {
       .expect(400)
       .expect('Content-Type', /application\/json/)
 
-    expect(result.body.error).toContain('password must be at least 3 characters')
+    expect(result.body.error).toContain(
+      'password must be at least 3 characters'
+    )
     const usersAtEnd = await helper.usersInDb()
     expect(usersAtEnd).toEqual(usersAtStart)
   })
 })
-
-
-

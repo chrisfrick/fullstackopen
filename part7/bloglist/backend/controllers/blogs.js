@@ -4,14 +4,13 @@ const User = require('../models/user')
 const userExtractor = require('../utils/middleware').userExtractor
 
 blogRouter.get('/', async (request, response) => {
-  const blogs = await Blog
-    .find({}).populate('user')
+  const blogs = await Blog.find({}).populate('user')
 
   response.json(blogs)
 })
 
 blogRouter.post('/', userExtractor, async (request, response) => {
-  const { title, author, url, likes} = request.body
+  const { title, author, url, likes } = request.body
   const user = request.user
 
   const blog = new Blog({
@@ -37,11 +36,13 @@ blogRouter.delete('/:id', userExtractor, async (request, response) => {
 
   if (!blog) return response.status(404).json({ error: 'blog does not exist' })
   if (blog.user.toString() !== user.id.toString()) {
-    return response.status(401).json({ error: 'user does not have permission to delete this blog'})
+    return response
+      .status(401)
+      .json({ error: 'user does not have permission to delete this blog' })
   }
 
   await Blog.findByIdAndRemove(request.params.id)
-  user.blogs = user.blogs.filter(id => id.toString() !== request.params.id)
+  user.blogs = user.blogs.filter((id) => id.toString() !== request.params.id)
   await user.save()
   response.status(204).end()
 })
@@ -56,11 +57,11 @@ blogRouter.put('/:id', async (request, response) => {
     likes: body.likes,
     url: body.url,
   }
-  const updatedBlog = await Blog.findByIdAndUpdate(
-    request.params.id, blog, { new: true }).populate('user')
+  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {
+    new: true,
+  }).populate('user')
   console.log(updatedBlog)
   response.json(updatedBlog)
-  
 })
 
 module.exports = blogRouter

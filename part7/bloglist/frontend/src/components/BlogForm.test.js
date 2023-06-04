@@ -8,7 +8,7 @@ test('<BlogForm /> calls event handler with correct details for new blog', async
   const createBlog = jest.fn()
   const user = userEvent.setup()
 
-  render(<BlogForm createBlog={createBlog}/>)
+  render(<BlogForm createBlog={createBlog} />)
 
   const title = screen.getByPlaceholderText('title')
   const author = screen.getByPlaceholderText('author')

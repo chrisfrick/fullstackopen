@@ -8,29 +8,29 @@ const Blog = ({ blog, username, handleLike, handleRemove }) => {
 
   const blogStyle = {
     border: '1px solid',
-    padding: 5
+    padding: 5,
   }
 
-  if (expanded) return (
-    <div className='blog' style={blogStyle}>
-      <div>
-        {blog.title} {blog.author} <button onClick={toggleExpanded}>hide</button>
+  if (expanded)
+    return (
+      <div className="blog" style={blogStyle}>
+        <div>
+          {blog.title} {blog.author}{' '}
+          <button onClick={toggleExpanded}>hide</button>
+        </div>
+        <div className="url">{blog.url}</div>
+        <div className="likes">
+          likes {blog.likes}{' '}
+          <button className="like-button" onClick={handleLike}>
+            like
+          </button>
+        </div>
+        <div>{blog.user.name}</div>
+        {username === blog.user.username ? (
+          <button onClick={handleRemove}>remove</button>
+        ) : null}
       </div>
-      <div className='url'>
-        {blog.url}
-      </div>
-      <div className='likes'>
-        likes {blog.likes} <button className='like-button' onClick={handleLike}>like</button>
-      </div>
-      <div>
-        {blog.user.name}
-      </div>
-      {username === blog.user.username
-        ? <button onClick={handleRemove}>remove</button>
-        : null
-      }
-    </div>
-  )
+    )
 
   return (
     <div style={blogStyle}>
@@ -43,7 +43,7 @@ Blog.propTypes = {
   blog: PropTypes.object.isRequired,
   username: PropTypes.string.isRequired,
   handleLike: PropTypes.func.isRequired,
-  handleRemove: PropTypes.func.isRequired
+  handleRemove: PropTypes.func.isRequired,
 }
 
 export default Blog

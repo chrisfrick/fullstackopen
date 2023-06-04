@@ -23,36 +23,41 @@ const BlogForm = ({ createBlog }) => {
       <h2>create a new blog</h2>
       <form onSubmit={addBlog}>
         <div>
-          <label>title:
+          <label>
+            title:
             <input
               id="title"
               value={newTitle}
-              onChange={event => setNewTitle(event.target.value)}
-              placeholder='title'
+              onChange={(event) => setNewTitle(event.target.value)}
+              placeholder="title"
             />
           </label>
         </div>
         <div>
-          <label>author:
+          <label>
+            author:
             <input
               id="author"
               value={newAuthor}
-              onChange={event => setNewAuthor(event.target.value)}
-              placeholder='author'
+              onChange={(event) => setNewAuthor(event.target.value)}
+              placeholder="author"
             />
           </label>
         </div>
         <div>
-          <label>url:
+          <label>
+            url:
             <input
               id="url"
               value={newUrl}
-              onChange={event => setNewUrl(event.target.value)}
-              placeholder='url'
+              onChange={(event) => setNewUrl(event.target.value)}
+              placeholder="url"
             />
           </label>
         </div>
-        <button id="blog-submit-button" type="submit">create</button>
+        <button id="blog-submit-button" type="submit">
+          create
+        </button>
       </form>
     </div>
   )

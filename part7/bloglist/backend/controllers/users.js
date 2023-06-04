@@ -10,7 +10,7 @@ usersRouter.post('/', async (request, response) => {
   if (!password || password.length < 3) {
     logger.error('password must be at least 3 characters')
     return response.status(400).json({
-      error: 'password must be at least 3 characters'
+      error: 'password must be at least 3 characters',
     })
   }
   const saltRounds = 10
@@ -19,7 +19,7 @@ usersRouter.post('/', async (request, response) => {
   const user = new User({
     username,
     name,
-    passwordHash
+    passwordHash,
   })
 
   const savedUser = await user.save()
@@ -28,9 +28,8 @@ usersRouter.post('/', async (request, response) => {
 })
 
 usersRouter.get('/', async (request, response) => {
-  const users = await User
-    .find({}).populate('blogs')
-    
+  const users = await User.find({}).populate('blogs')
+
   response.json(users)
 })
 module.exports = usersRouter
