@@ -1,7 +1,11 @@
 import { useState, useEffect, useRef } from 'react'
-import Blog from './components/Blog'
+import { useDispatch } from 'react-redux'
+import { setNotification } from './reducers/notificationReducer'
+
 import blogService from './services/blogs'
 import loginService from './services/login'
+
+import Blog from './components/Blog'
 import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
@@ -11,8 +15,8 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [notification, setNotification] = useState(null)
-  const [notificationType, setNotificationType] = useState(null)
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     blogService.getAll().then((blogs) => {
@@ -44,12 +48,15 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      setNotification('incorrect username or password')
-      setNotificationType('error')
-      setTimeout(() => {
-        setNotification(null)
-        setNotificationType(null)
-      }, 5000)
+      dispatch(
+        setNotification(
+          {
+            message: 'incorrect username or password',
+            type: 'error',
+          },
+          5
+        )
+      )
     }
   }
 
@@ -107,12 +114,15 @@ const App = () => {
     let newBlog = await blogService.create(blogObject)
     setBlogs(blogs.concat(newBlog))
 
-    setNotification(`a new blog ${newBlog.title} successfully added`)
-    setNotificationType('success')
-    setTimeout(() => {
-      setNotification(null)
-      setNotificationType(null)
-    }, 5000)
+    dispatch(
+      setNotification(
+        {
+          message: `a new blog ${newBlog.title} successfully added`,
+          type: 'success',
+        },
+        5
+      )
+    )
   }
 
   const blogFormRef = useRef()
@@ -127,7 +137,7 @@ const App = () => {
     return (
       <div>
         <h2>Log in to application</h2>
-        <Notification message={notification} color={notificationType} />
+        <Notification />
         {loginForm()}
       </div>
     )
@@ -136,7 +146,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Notification message={notification} color={notificationType} />
+      <Notification />
       <div>
         <div>
           {user.name} logged in
