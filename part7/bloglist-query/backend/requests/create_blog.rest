@@ -1,0 +1,10 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+// Authorization: Bearer
+
+{
+    "title": "A Blog",
+    "author": "Santa Claus",
+    "url": "http://north.pole",
+    "likes": "233"
+}
