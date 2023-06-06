@@ -94,7 +94,6 @@ const App = () => {
 
   const handleLike = async (id) => {
     const blog = blogs.find((b) => b.id === id)
-    console.log(user, blog)
     const updatedBlog = { ...blog, likes: blog.likes + 1, user: blog.user.id }
     const returnedBlog = await blogService.update(id.toString(), updatedBlog)
     dispatch(
@@ -105,7 +104,7 @@ const App = () => {
   const handleRemove = async (blog) => {
     if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
       await blogService.remove(blog.id.toString())
-      setBlogs(blogs.filter((b) => b.id !== blog.id.toString()))
+      dispatch(setBlogs(blogs.filter((b) => b.id !== blog.id.toString())))
     }
   }
 
