@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { setNotification } from './reducers/notificationReducer'
+import { useNotificationDispatch } from './NotificationContext'
 import { initializeBlogs, setBlogs } from './reducers/blogReducer'
 import { setUser } from './reducers/userReducer'
 
@@ -18,6 +18,7 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
+  const notificationDispatch = useNotificationDispatch()
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -47,15 +48,14 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (exception) {
-      dispatch(
-        setNotification(
-          {
-            message: 'incorrect username or password',
-            type: 'error',
-          },
-          5
-        )
-      )
+      notificationDispatch({
+        type: 'SET',
+        payload: {
+          message: 'incorrect username or password',
+          type: 'error',
+        },
+      })
+      setTimeout(() => notificationDispatch({ type: 'CLEAR' }), 5000)
     }
   }
 
@@ -114,15 +114,14 @@ const App = () => {
     let newBlog = await blogService.create(blogObject)
     dispatch(setBlogs(blogs.concat(newBlog)))
 
-    dispatch(
-      setNotification(
-        {
-          message: `a new blog ${newBlog.title} successfully added`,
-          type: 'success',
-        },
-        5
-      )
-    )
+    notificationDispatch({
+      type: 'SET',
+      payload: {
+        message: `a new blog ${newBlog.title} successfully added`,
+        type: 'success',
+      },
+    })
+    setTimeout(() => notificationDispatch({ type: 'CLEAR' }), 5000)
   }
 
   const blogFormRef = useRef()
