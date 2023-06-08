@@ -1,14 +1,40 @@
 import { useState } from 'react'
+import { useMutation, useQueryClient } from 'react-query'
+import blogService from '../services/blogs'
 import PropTypes from 'prop-types'
 
-const Blog = ({ blog, username, handleLike, handleRemove }) => {
+const Blog = ({ blog, username }) => {
   const [expanded, setExpanded] = useState(false)
+  const queryClient = useQueryClient()
+
+  const updateBlogMutation = useMutation(blogService.update, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('blogs')
+    },
+  })
+
+  const removeBlogMutation = useMutation(blogService.remove, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('blogs')
+    },
+  })
 
   const toggleExpanded = () => setExpanded(!expanded)
 
   const blogStyle = {
     border: '1px solid',
     padding: 5,
+  }
+
+  const handleLike = () => {
+    const updatedBlog = { ...blog, likes: blog.likes + 1, user: blog.user.id }
+    updateBlogMutation.mutate(updatedBlog)
+  }
+
+  const handleRemove = () => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
+      removeBlogMutation.mutate(blog.id.toString())
+    }
   }
 
   if (expanded)
@@ -42,8 +68,6 @@ const Blog = ({ blog, username, handleLike, handleRemove }) => {
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
   username: PropTypes.string.isRequired,
-  handleLike: PropTypes.func.isRequired,
-  handleRemove: PropTypes.func.isRequired,
 }
 
 export default Blog

@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useQuery } from 'react-query'
 import { useNotificationDispatch } from './NotificationContext'
-import { setBlogs } from './reducers/blogReducer'
 import { setUser } from './reducers/userReducer'
 
 import blogService from './services/blogs'
@@ -97,22 +96,6 @@ const App = () => {
     </form>
   )
 
-  const handleLike = async (id) => {
-    const blog = blogs.find((b) => b.id === id)
-    const updatedBlog = { ...blog, likes: blog.likes + 1, user: blog.user.id }
-    const returnedBlog = await blogService.update(id.toString(), updatedBlog)
-    dispatch(
-      setBlogs(blogs.map((blog) => (blog.id !== id ? blog : returnedBlog)))
-    )
-  }
-
-  const handleRemove = async (blog) => {
-    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}?`)) {
-      await blogService.remove(blog.id.toString())
-      dispatch(setBlogs(blogs.filter((b) => b.id !== blog.id.toString())))
-    }
-  }
-
   const blogForm = () => (
     <Togglable buttonLabel="new blog" ref={blogFormRef}>
       <BlogForm
@@ -143,13 +126,7 @@ const App = () => {
         <div>{blogForm()}</div>
         <div>
           {blogs.map((blog) => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              username={user.username}
-              handleLike={() => handleLike(blog.id)}
-              handleRemove={() => handleRemove(blog)}
-            />
+            <Blog key={blog.id} blog={blog} username={user.username} />
           ))}
         </div>
       </div>
