@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useMutation, useQuery, useQueryClient } from 'react-query'
+import { useQuery } from 'react-query'
 import { useNotificationDispatch } from './NotificationContext'
 import { setBlogs } from './reducers/blogReducer'
 import { setUser } from './reducers/userReducer'
@@ -20,8 +20,6 @@ const App = () => {
   const blogFormRef = useRef()
   const notificationDispatch = useNotificationDispatch()
   const dispatch = useDispatch()
-  const newBlogMutation = useMutation(blogService.create)
-  const queryClient = useQueryClient()
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
@@ -115,28 +113,11 @@ const App = () => {
     }
   }
 
-  const addBlog = async (blogObject) => {
-    blogFormRef.current.toggleVisibility()
-    newBlogMutation.mutate(blogObject, {
-      onSuccess: () => {
-        queryClient.invalidateQueries('blogs')
-      },
-    })
-    // dispatch(setBlogs(blogs.concat(newBlog)))
-
-    notificationDispatch({
-      type: 'SET',
-      payload: {
-        message: `a new blog ${blogObject.title} successfully added`,
-        type: 'success',
-      },
-    })
-    setTimeout(() => notificationDispatch({ type: 'CLEAR' }), 5000)
-  }
-
   const blogForm = () => (
     <Togglable buttonLabel="new blog" ref={blogFormRef}>
-      <BlogForm createBlog={addBlog} />
+      <BlogForm
+        toggleVisibility={() => blogFormRef.current.toggleVisibility()}
+      />
     </Togglable>
   )
 

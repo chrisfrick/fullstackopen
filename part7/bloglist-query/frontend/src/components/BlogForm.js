@@ -1,21 +1,42 @@
 import { useState } from 'react'
+import { useQueryClient, useMutation } from 'react-query'
+import { useNotificationDispatch } from '../NotificationContext'
+import blogService from '../services/blogs'
 
-const BlogForm = ({ createBlog }) => {
+const BlogForm = ({ toggleVisibility }) => {
   const [newTitle, setNewTitle] = useState('')
   const [newAuthor, setNewAuthor] = useState('')
   const [newUrl, setNewUrl] = useState('')
+  const queryClient = useQueryClient()
+  const notificationDispatch = useNotificationDispatch()
 
-  const addBlog = (event) => {
+  const newBlogMutation = useMutation(blogService.create, {
+    onSuccess: () => {
+      queryClient.invalidateQueries('blogs')
+    },
+  })
+
+  const addBlog = async (event) => {
     event.preventDefault()
-    createBlog({
+    const blogObject = {
       title: newTitle,
       author: newAuthor,
       url: newUrl,
-    })
+    }
 
     setNewTitle('')
     setNewAuthor('')
     setNewUrl('')
+    toggleVisibility()
+    newBlogMutation.mutate(blogObject)
+    notificationDispatch({
+      type: 'SET',
+      payload: {
+        message: `a new blog ${blogObject.title} successfully added`,
+        type: 'success',
+      },
+    })
+    setTimeout(() => notificationDispatch({ type: 'CLEAR' }), 5000)
   }
 
   return (
