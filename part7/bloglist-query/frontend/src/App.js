@@ -1,7 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useMutation, useQuery, useQueryClient } from 'react-query'
 import { useNotificationDispatch } from './NotificationContext'
-import { initializeBlogs, setBlogs } from './reducers/blogReducer'
+import { setBlogs } from './reducers/blogReducer'
 import { setUser } from './reducers/userReducer'
 
 import blogService from './services/blogs'
@@ -13,17 +14,14 @@ import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
 
 const App = () => {
-  const blogs = useSelector((state) => state.blogs)
   const user = useSelector((state) => state.user)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-
+  const blogFormRef = useRef()
   const notificationDispatch = useNotificationDispatch()
   const dispatch = useDispatch()
-
-  useEffect(() => {
-    dispatch(initializeBlogs())
-  }, [])
+  const newBlogMutation = useMutation(blogService.create)
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
@@ -33,6 +31,14 @@ const App = () => {
       blogService.setToken(user.token)
     }
   }, [])
+
+  const blogQuery = useQuery('blogs', blogService.getAll)
+
+  if (blogQuery.isLoading) {
+    return <div>loading data...</div>
+  }
+
+  const blogs = blogQuery.data
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -111,20 +117,22 @@ const App = () => {
 
   const addBlog = async (blogObject) => {
     blogFormRef.current.toggleVisibility()
-    let newBlog = await blogService.create(blogObject)
-    dispatch(setBlogs(blogs.concat(newBlog)))
+    newBlogMutation.mutate(blogObject, {
+      onSuccess: () => {
+        queryClient.invalidateQueries('blogs')
+      },
+    })
+    // dispatch(setBlogs(blogs.concat(newBlog)))
 
     notificationDispatch({
       type: 'SET',
       payload: {
-        message: `a new blog ${newBlog.title} successfully added`,
+        message: `a new blog ${blogObject.title} successfully added`,
         type: 'success',
       },
     })
     setTimeout(() => notificationDispatch({ type: 'CLEAR' }), 5000)
   }
-
-  const blogFormRef = useRef()
 
   const blogForm = () => (
     <Togglable buttonLabel="new blog" ref={blogFormRef}>
