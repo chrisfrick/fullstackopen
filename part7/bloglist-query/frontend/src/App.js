@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useState, useEffect, useRef, useContext } from 'react'
+//import { useDispatch } from 'react-redux'
 import { useQuery } from 'react-query'
 import { useNotificationDispatch } from './NotificationContext'
-import { setUser } from './reducers/userReducer'
+// import { setUser } from './reducers/userReducer'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -11,20 +11,21 @@ import Blog from './components/Blog'
 import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
 import Togglable from './components/Togglable'
+import UserContext from './UserContext'
 
 const App = () => {
-  const user = useSelector((state) => state.user)
+  const [user, userDispatch] = useContext(UserContext)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const blogFormRef = useRef()
   const notificationDispatch = useNotificationDispatch()
-  const dispatch = useDispatch()
+  //const dispatch = useDispatch()
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      dispatch(setUser(user))
+      userDispatch({ type: 'SET', payload: user })
       blogService.setToken(user.token)
     }
   }, [])
@@ -47,7 +48,7 @@ const App = () => {
       })
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
       blogService.setToken(user.token)
-      dispatch(setUser(user))
+      userDispatch({ type: 'SET', payload: user })
       setUsername('')
       setPassword('')
     } catch (exception) {
@@ -65,7 +66,7 @@ const App = () => {
   const handleLogout = () => {
     window.localStorage.removeItem('loggedBlogAppUser')
     blogService.setToken(null)
-    dispatch(setUser(null))
+    userDispatch({ type: 'SET', payload: null })
   }
 
   const loginForm = () => (
