@@ -1,8 +1,6 @@
 import { useState, useEffect, useRef, useContext } from 'react'
-//import { useDispatch } from 'react-redux'
 import { useQuery } from 'react-query'
 import { useNotificationDispatch } from './NotificationContext'
-// import { setUser } from './reducers/userReducer'
 
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -17,9 +15,8 @@ const App = () => {
   const [user, userDispatch] = useContext(UserContext)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const blogFormRef = useRef()
   const notificationDispatch = useNotificationDispatch()
-  //const dispatch = useDispatch()
+  const blogFormRef = useRef()
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
@@ -36,7 +33,7 @@ const App = () => {
     return <div>loading data...</div>
   }
 
-  const blogs = blogQuery.data
+  const blogs = blogQuery.data.sort((a, b) => (a.likes > b.likes ? -1 : 1))
 
   const handleLogin = async (event) => {
     event.preventDefault()
