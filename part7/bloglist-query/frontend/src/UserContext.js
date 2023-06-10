@@ -1,4 +1,4 @@
-import { useReducer, createContext } from 'react'
+import { useReducer, useContext, createContext } from 'react'
 /* eslint-disable */
 const userReducer = (state, action) => {
   switch (action.type) {
@@ -10,6 +10,11 @@ const userReducer = (state, action) => {
 }
 
 const UserContext = createContext()
+
+export const useUserDispatch = () => {
+  const userAndDispatch = useContext(UserContext)
+  return userAndDispatch[1]
+}
 
 export const UserContextProvider = (props) => {
   const [user, userDispatch] = useReducer(userReducer, null)
