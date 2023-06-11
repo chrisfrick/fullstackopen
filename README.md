@@ -1,4 +1,5 @@
 # Full Stack Open
+
 ## Exercises for the Full Stack Open course
 
 ## Part 0 - Fundamendals of web apps
@@ -14,3 +15,5 @@
 ## Part 5 - Testing React apps
 
 ## Part 6 - Advanced state management
+
+## Part 7 - React router, custom hooks, webpack, styling
