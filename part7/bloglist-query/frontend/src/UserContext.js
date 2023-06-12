@@ -11,6 +11,10 @@ const userReducer = (state, action) => {
 
 const UserContext = createContext()
 
+export const useUser = () => {
+  const userAndDispatch = useContext(UserContext)
+  return userAndDispatch[0]
+}
 export const useUserDispatch = () => {
   const userAndDispatch = useContext(UserContext)
   return userAndDispatch[1]
