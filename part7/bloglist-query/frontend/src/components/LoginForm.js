@@ -14,6 +14,7 @@ const LoginForm = () => {
     event.preventDefault()
 
     try {
+      console.log(loginService)
       const user = await loginService.login({
         username,
         password,
