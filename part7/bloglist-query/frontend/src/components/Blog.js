@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
+import { Link } from 'react-router-dom'
 import blogService from '../services/blogs'
 import PropTypes from 'prop-types'
 
@@ -60,7 +61,10 @@ const Blog = ({ blog, username }) => {
 
   return (
     <div style={blogStyle}>
-      {blog.title} {blog.author} <button onClick={toggleExpanded}>view</button>
+      <Link to={`/blogs/${blog.id}`} key={blog.id}>
+        {blog.title}
+      </Link>{' '}
+      {blog.author} <button onClick={toggleExpanded}>expand</button>
     </div>
   )
 }

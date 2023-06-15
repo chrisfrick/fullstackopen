@@ -9,6 +9,7 @@ import Blogs from './components/Blogs'
 import Users from './components/Users'
 import User from './components/User'
 import UserContext from './UserContext'
+import BlogPage from './components/BlogPage'
 
 const App = () => {
   const [user, userDispatch] = useContext(UserContext)
@@ -54,6 +55,7 @@ const App = () => {
           <Route path="/" element={<Blogs />}></Route>
           <Route path="/users" element={<Users />} />
           <Route path="/users/:id" element={<User />}></Route>
+          <Route path="/blogs/:id" element={<BlogPage />}></Route>
         </Routes>
       </div>
     </div>
