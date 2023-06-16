@@ -1,5 +1,5 @@
 import { useEffect, useContext } from 'react'
-import { Routes, Route } from 'react-router-dom'
+import { Routes, Route, Link } from 'react-router-dom'
 
 import blogService from './services/blogs'
 
@@ -39,18 +39,25 @@ const App = () => {
     )
   }
 
+  const padding = {
+    padding: 5,
+  }
+
   return (
     <div>
+      <div style={{ backgroundColor: 'lightGray', padding: 5 }}>
+        <Link style={padding} to="/">
+          blogs
+        </Link>
+        <Link style={padding} to="/users">
+          users
+        </Link>
+        {user.name} logged in
+        <button onClick={handleLogout}>logout</button>
+      </div>
       <h2>blogs</h2>
       <Notification />
       <div>
-        <div>
-          {user.name} logged in
-          <div>
-            <button onClick={handleLogout}>logout</button>
-          </div>
-        </div>
-
         <Routes>
           <Route path="/" element={<Blogs />}></Route>
           <Route path="/users" element={<Users />} />
