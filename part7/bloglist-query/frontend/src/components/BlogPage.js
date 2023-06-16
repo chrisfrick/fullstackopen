@@ -22,7 +22,7 @@ const BlogPage = () => {
     const updatedBlog = { ...blog, likes: blog.likes + 1, user: blog.user.id }
     updateBlogMutation.mutate(updatedBlog)
   }
-
+  console.log(blog)
   return (
     <div>
       <h2>{blog.title}</h2>
@@ -36,6 +36,12 @@ const BlogPage = () => {
         </button>
       </div>
       <div>added by {blog.user.name}</div>
+      <h3>comments</h3>
+      <ul>
+        {blog.comments.map((comment) => (
+          <li key={comment}>{comment}</li>
+        ))}
+      </ul>
     </div>
   )
 }

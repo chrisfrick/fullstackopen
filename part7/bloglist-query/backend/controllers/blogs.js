@@ -55,11 +55,28 @@ blogRouter.put('/:id', async (request, response) => {
     ttle: body.title,
     author: body.author,
     likes: body.likes,
+    comments: body.comments,
     url: body.url,
   }
   const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, {
     new: true,
   }).populate('user')
+  console.log(updatedBlog)
+  response.json(updatedBlog)
+})
+
+blogRouter.post('/:id/comments', async (request, response) => {
+  const comment = request.body.comment
+  console.log(comment)
+  const blog = await Blog.findById(request.params.id)
+  console.log(blog)
+  const updatedBlog = await Blog.findByIdAndUpdate(
+    request.params.id,
+    {
+      $push: { comments: request.body.comment },
+    },
+    { new: true }
+  ).populate('user')
   console.log(updatedBlog)
   response.json(updatedBlog)
 })
