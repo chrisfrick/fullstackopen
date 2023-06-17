@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useQueryClient, useMutation } from 'react-query'
 import { useNotificationDispatch } from '../NotificationContext'
+import { Typography, TextField, Button } from '@mui/material'
 import blogService from '../services/blogs'
 
 const BlogForm = ({ toggleVisibility }) => {
@@ -41,12 +42,13 @@ const BlogForm = ({ toggleVisibility }) => {
 
   return (
     <div>
-      <h2>create a new blog</h2>
+      <Typography variant="h5">create a new blog</Typography>
       <form onSubmit={addBlog}>
         <div>
           <label>
-            title:
-            <input
+            <TextField
+              label="title"
+              size="small"
               id="title"
               value={newTitle}
               onChange={(event) => setNewTitle(event.target.value)}
@@ -56,8 +58,9 @@ const BlogForm = ({ toggleVisibility }) => {
         </div>
         <div>
           <label>
-            author:
-            <input
+            <TextField
+              label="author"
+              size="small"
               id="author"
               value={newAuthor}
               onChange={(event) => setNewAuthor(event.target.value)}
@@ -67,8 +70,9 @@ const BlogForm = ({ toggleVisibility }) => {
         </div>
         <div>
           <label>
-            url:
-            <input
+            <TextField
+              label="url"
+              size="small"
               id="url"
               value={newUrl}
               onChange={(event) => setNewUrl(event.target.value)}
@@ -76,9 +80,9 @@ const BlogForm = ({ toggleVisibility }) => {
             />
           </label>
         </div>
-        <button id="blog-submit-button" type="submit">
+        <Button variant="contained" id="blog-submit-button" type="submit">
           create
-        </button>
+        </Button>
       </form>
     </div>
   )

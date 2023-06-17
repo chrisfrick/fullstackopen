@@ -3,6 +3,15 @@ import { Routes, Route, Link } from 'react-router-dom'
 
 import blogService from './services/blogs'
 
+import {
+  Container,
+  AppBar,
+  Toolbar,
+  Button,
+  List,
+  Typography,
+} from '@mui/material'
+
 import LoginForm from './components/LoginForm'
 import Notification from './components/Notification'
 import Blogs from './components/Blogs'
@@ -31,31 +40,35 @@ const App = () => {
 
   if (user === null) {
     return (
-      <div>
-        <h2>Log in to application</h2>
+      <Container>
+        <h2>Log in</h2>
         <Notification />
         <LoginForm />
-      </div>
+      </Container>
     )
   }
 
-  const padding = {
-    padding: 5,
-  }
-
   return (
-    <div>
-      <div style={{ backgroundColor: 'lightGray', padding: 5 }}>
-        <Link style={padding} to="/">
-          blogs
-        </Link>
-        <Link style={padding} to="/users">
-          users
-        </Link>
-        {user.name} logged in
-        <button onClick={handleLogout}>logout</button>
-      </div>
-      <h2>blogs</h2>
+    <Container>
+      <AppBar position="static">
+        <Toolbar>
+          <List sx={{ flexGrow: 1 }}>
+            <Button color="inherit" component={Link} to="/">
+              blogs
+            </Button>
+            <Button color="inherit" component={Link} to="/users">
+              users
+            </Button>
+          </List>
+          <Typography component="div" sx={{ paddingRight: 1 }}>
+            {user.name} logged in
+          </Typography>
+          <Button variant="outlined" color="inherit" onClick={handleLogout}>
+            logout
+          </Button>
+        </Toolbar>
+      </AppBar>
+      <Typography variant="h4">blogs</Typography>
       <Notification />
       <div>
         <Routes>
@@ -65,7 +78,7 @@ const App = () => {
           <Route path="/blogs/:id" element={<BlogPage />}></Route>
         </Routes>
       </div>
-    </div>
+    </Container>
   )
 }
 

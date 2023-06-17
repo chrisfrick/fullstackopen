@@ -3,6 +3,7 @@ import { useNotificationDispatch } from '../NotificationContext'
 import { useUserDispatch } from '../UserContext'
 import loginService from '../services/login'
 import blogService from '../services/blogs'
+import { Button, TextField } from '@mui/material'
 
 const LoginForm = () => {
   const [username, setUsername] = useState('')
@@ -22,6 +23,14 @@ const LoginForm = () => {
       window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
       blogService.setToken(user.token)
       userDispatch({ type: 'SET', payload: user })
+      notificationDispatch({
+        type: 'SET',
+        payload: {
+          message: `welcome ${username}`,
+          type: 'success',
+        },
+      })
+      setTimeout(() => notificationDispatch({ type: 'CLEAR' }), 5000)
       setUsername('')
       setPassword('')
     } catch (exception) {
@@ -39,8 +48,8 @@ const LoginForm = () => {
   return (
     <form onSubmit={handleLogin}>
       <div>
-        username
-        <input
+        <TextField
+          label="username"
           type="text"
           id="username"
           value={username}
@@ -49,8 +58,8 @@ const LoginForm = () => {
         />
       </div>
       <div>
-        password
-        <input
+        <TextField
+          label="password"
           type="password"
           id="password"
           value={password}
@@ -58,9 +67,9 @@ const LoginForm = () => {
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
-      <button id="login-button" type="submit">
+      <Button variant="contained" id="login-button" type="submit">
         login
-      </button>
+      </Button>
     </form>
   )
 }

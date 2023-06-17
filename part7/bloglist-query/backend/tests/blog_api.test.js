@@ -62,6 +62,7 @@ describe('adding a blog', () => {
       author: 'Bloggy McBlogface',
       url: 'http://blog.blog.blog',
       likes: 42,
+      comments: [],
     }
 
     await api
@@ -104,6 +105,7 @@ describe('adding a blog', () => {
       author: 'Bloggy McBlogface',
       url: 'http://blog.blog.blog',
       likes: 0,
+      comments: [],
     }
     expect(blogsAtEnd).toContainEqual(newBlogWithNoLikes)
   })

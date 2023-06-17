@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import { useMutation, useQueryClient } from 'react-query'
 import { Link } from 'react-router-dom'
+import { Paper, Button, Typography } from '@mui/material'
+import DeleteIcon from '@mui/icons-material/Delete'
+import ThumbUpIcon from '@mui/icons-material/ThumbUp'
 import blogService from '../services/blogs'
 import PropTypes from 'prop-types'
 
@@ -40,32 +43,50 @@ const Blog = ({ blog, username }) => {
 
   if (expanded)
     return (
-      <div className="blog" style={blogStyle}>
-        <div>
+      <Paper className="blog" style={blogStyle}>
+        <Typography>
           {blog.title} {blog.author}{' '}
-          <button onClick={toggleExpanded}>hide</button>
-        </div>
-        <div className="url">{blog.url}</div>
-        <div className="likes">
+          <Button size="small" variant="contained" onClick={toggleExpanded}>
+            hide
+          </Button>
+        </Typography>
+        <Typography className="url">{blog.url}</Typography>
+        <Typography className="likes">
           likes {blog.likes}{' '}
-          <button className="like-button" onClick={handleLike}>
+          <Button
+            size="small"
+            variant="outlined"
+            startIcon={<ThumbUpIcon />}
+            className="like-button"
+            onClick={handleLike}
+          >
             like
-          </button>
-        </div>
-        <div>{blog.user.name}</div>
+          </Button>
+        </Typography>
+        <Typography>{blog.user.name}</Typography>
         {username === blog.user.username ? (
-          <button onClick={handleRemove}>remove</button>
+          <Button
+            size="small"
+            variant="outlined"
+            startIcon={<DeleteIcon />}
+            onClick={handleRemove}
+          >
+            remove
+          </Button>
         ) : null}
-      </div>
+      </Paper>
     )
 
   return (
-    <div style={blogStyle}>
+    <Paper style={blogStyle}>
       <Link to={`/blogs/${blog.id}`} key={blog.id}>
-        {blog.title}
-      </Link>{' '}
-      {blog.author} <button onClick={toggleExpanded}>expand</button>
-    </div>
+        <Typography>{blog.title}</Typography>
+      </Link>
+      <Typography>{blog.author} </Typography>
+      <Button variant="outlined" size="small" onClick={toggleExpanded}>
+        expand
+      </Button>
+    </Paper>
   )
 }
 
