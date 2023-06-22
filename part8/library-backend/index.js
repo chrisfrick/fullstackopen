@@ -80,9 +80,17 @@ let books = [
 ]
 
 const typeDefs = `
+  type Book {
+    title: String!
+    published: Int!
+    author: String!
+    id: ID!
+    genres: [String!]!
+  }
   type Query {
     authorCount: Int!
     bookCount: Int!
+    allBooks: [Book!]!
   }
 `
 
@@ -90,6 +98,7 @@ const resolvers = {
   Query: {
     authorCount: () => authors.length,
     bookCount: () => books.length,
+    allBooks: () => books,
   },
 }
 
