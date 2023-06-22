@@ -1,3 +1,4 @@
+import { List, ListItem, ListItemText, Typography } from '@mui/material'
 import { useQuery } from 'react-query'
 import { useMatch } from 'react-router-dom'
 import userService from '../services/users'
@@ -14,13 +15,15 @@ const User = () => {
 
   return (
     <div>
-      <h2>{user.name}</h2>
-      <h3>added the following blogs</h3>
-      <ul>
+      <Typography variant="h5">{user.name}</Typography>
+      <Typography variant="h5">added the following blogs</Typography>
+      <List>
         {user.blogs.map((blog) => (
-          <li key={blog.url}>{blog.title}</li>
+          <ListItem key={blog.url}>
+            <ListItemText primary={blog.title}></ListItemText>
+          </ListItem>
         ))}
-      </ul>
+      </List>
     </div>
   )
 }

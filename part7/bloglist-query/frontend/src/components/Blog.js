@@ -28,6 +28,8 @@ const Blog = ({ blog, username }) => {
   const blogStyle = {
     border: '1px solid',
     padding: 5,
+    marginBottom: 5,
+    marginTop: 5,
   }
 
   const handleLike = () => {

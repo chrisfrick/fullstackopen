@@ -1,3 +1,14 @@
+import {
+  Button,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  TextField,
+  Typography,
+} from '@mui/material'
+import ThumbUpIcon from '@mui/icons-material/ThumbUp'
+import CommentIcon from '@mui/icons-material/Comment'
 import { useMatch } from 'react-router-dom'
 import { useQuery, useMutation, useQueryClient } from 'react-query'
 import blogService from '../services/blogs'
@@ -39,31 +50,46 @@ const BlogPage = () => {
   }
   return (
     <div>
-      <h2>{blog.title}</h2>
-      <div>
+      <Typography variant="h5">{blog.title}</Typography>
+      <Typography>
         <a href={blog.url}>{blog.url}</a>
-      </div>
-      <div className="likes">
+      </Typography>
+      <Typography className="likes">
         likes {blog.likes}{' '}
-        <button className="like-button" onClick={handleLike}>
+        <Button
+          className="like-button"
+          size="small"
+          variant="outlined"
+          startIcon={<ThumbUpIcon />}
+          onClick={handleLike}
+        >
           like
-        </button>
-      </div>
-      <div>added by {blog.user.name}</div>
-      <h3>comments</h3>
+        </Button>
+      </Typography>
+      <Typography>added by {blog.user.name}</Typography>
+      <Typography>comments</Typography>
       <form onSubmit={addComment}>
-        <input
-          id="comment"
-          value={newComment}
-          onChange={(event) => setNewComment(event.target.value)}
-        />
-        <button type="submit">add comment</button>
+        <div>
+          <TextField
+            id="comment"
+            value={newComment}
+            onChange={(event) => setNewComment(event.target.value)}
+          />
+        </div>
+        <Button variant="outlined" type="submit">
+          add comment
+        </Button>
       </form>
-      <ul>
+      <List>
         {blog.comments.map((comment) => (
-          <li key={comment}>{comment}</li>
+          <ListItem key={comment}>
+            <ListItemIcon>
+              <CommentIcon />
+            </ListItemIcon>
+            <ListItemText>{comment}</ListItemText>
+          </ListItem>
         ))}
-      </ul>
+      </List>
     </div>
   )
 }
