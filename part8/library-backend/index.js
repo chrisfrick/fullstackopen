@@ -144,7 +144,11 @@ const resolvers = {
     authorCount: async () => Author.collection.countDocuments(),
     bookCount: async () => Book.collection.countDocuments(),
     allBooks: async (root, args) => {
-      return Book.find({})
+      if (!args.genre) {
+        return Book.find({}).populate('author')
+      }
+
+      return Book.find({ genres: args.genre })
     },
     allAuthors: async () => Author.find({}),
   },
@@ -166,15 +170,14 @@ const resolvers = {
       const book = new Book({ ...args, author: author })
       return book.save()
     },
-    editAuthor: (root, args) => {
-      const author = authors.find(a => a.name === args.name)
+    editAuthor: async (root, args) => {
+      const author = await Author.findOne({ name: args.name })
       if (!author) {
         return null
       }
 
-      const updatedAuthor = { ...author, born: args.setBornTo }
-      authors = authors.map(a => (a.name === args.name ? updatedAuthor : a))
-      return updatedAuthor
+      author.born = args.setBornTo
+      return author.save()
     },
   },
 }
