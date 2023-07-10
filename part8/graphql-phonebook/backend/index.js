@@ -151,7 +151,7 @@ const resolvers = {
       }
       return person
     },
-    creatUser: async (root, args) => {
+    createUser: async (root, args) => {
       const user = new User({ username: args.username })
 
       return user.save().catch(error => {
@@ -197,7 +197,7 @@ const resolvers = {
 
       const person = await Person.findOne({ name: args.name })
       if (!isFriend(person)) {
-        currentUser.friends = currentUser.frioends.concat(person)
+        currentUser.friends = currentUser.friends.concat(person)
       }
 
       await currentUser.save()
