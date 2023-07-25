@@ -1,12 +1,12 @@
 const { ApolloServer } = require('@apollo/server')
 const { startStandaloneServer } = require('@apollo/server/standalone')
-const { v1: uuid } = require('uuid')
 const { GraphQLError } = require('graphql')
 const jwt = require('jsonwebtoken')
 
 const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
 const Person = require('./models/person')
+const User = require('./models/user')
 
 require('dotenv').config()
 
