@@ -22,7 +22,9 @@ const BirthYearForm = ({ authors }) => {
           author{' '}
           <select value={name} onChange={({ target }) => setName(target.value)}>
             {authors.map(a => (
-              <option value={a.name}>{a.name}</option>
+              <option value={a.name} key={a.name}>
+                {a.name}
+              </option>
             ))}
           </select>
         </div>
@@ -68,7 +70,7 @@ const Authors = props => {
           ))}
         </tbody>
       </table>
-      <BirthYearForm authors={authors} />
+      {props.token ? <BirthYearForm authors={authors} /> : null}
     </div>
   )
 }
