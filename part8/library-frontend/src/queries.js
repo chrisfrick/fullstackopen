@@ -8,7 +8,7 @@ export const LOGIN = gql`
   }
 `
 export const ALL_AUTHORS = gql`
-  query {
+  query allAuthors {
     allAuthors {
       name
       born
