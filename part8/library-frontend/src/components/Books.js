@@ -4,7 +4,7 @@ import { ALL_BOOKS } from '../queries'
 
 const Books = props => {
   const result = useQuery(ALL_BOOKS)
-  const [filter, setFilter] = useState('null')
+  const [filter, setFilter] = useState(null)
 
   if (!props.show) {
     return null

@@ -66,3 +66,12 @@ export const EDIT_BIRTH_YEAR = gql`
     }
   }
 `
+
+export const ME = gql`
+  query {
+    me {
+      username
+      favoriteGenre
+    }
+  }
+`
