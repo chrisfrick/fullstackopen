@@ -1,25 +1,31 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useQuery } from '@apollo/client'
 import { ALL_BOOKS } from '../queries'
 
 const Books = props => {
-  const result = useQuery(ALL_BOOKS)
+  const allBooksResult = useQuery(ALL_BOOKS)
+  const filteredBooksResult = useQuery(ALL_BOOKS)
   const [filter, setFilter] = useState(null)
+
+  useEffect(() => {
+    filteredBooksResult.refetch({ genre: filter })
+  }, [filter]) //eslint-disable-line
+
+  if (allBooksResult.loading) return <div>loading...</div>
 
   if (!props.show) {
     return null
   }
 
-  if (result.loading) return <div>loading...</div>
-
-  const books = result.data.allBooks
-  const genres = new Set()
-  books.forEach(book =>
+  const allBooks = allBooksResult.data.allBooks
+  const allGenres = new Set()
+  allBooks.forEach(book =>
     book.genres.forEach(genre => {
-      genres.add(genre)
+      allGenres.add(genre)
     })
   )
 
+  const filteredBooks = filteredBooksResult.data.allBooks
   return (
     <div>
       <h2>books</h2>
@@ -40,18 +46,16 @@ const Books = props => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {books
-            .filter(b => (filter ? b.genres.includes(filter) : true))
-            .map(b => (
-              <tr key={b.title}>
-                <td>{b.title}</td>
-                <td>{b.author.name}</td>
-                <td>{b.published}</td>
-              </tr>
-            ))}
+          {filteredBooks.map(b => (
+            <tr key={b.title}>
+              <td>{b.title}</td>
+              <td>{b.author.name}</td>
+              <td>{b.published}</td>
+            </tr>
+          ))}
         </tbody>
       </table>
-      {[...genres].map(genre => (
+      {[...allGenres].map(genre => (
         <button key={genre} onClick={() => setFilter(genre)}>
           {genre}
         </button>
