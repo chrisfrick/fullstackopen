@@ -1,23 +1,26 @@
 import { useState, useEffect } from 'react'
-import { useQuery } from '@apollo/client'
+import { useQuery, useLazyQuery } from '@apollo/client'
 import { ALL_BOOKS } from '../queries'
 
 const Books = props => {
   const allBooksResult = useQuery(ALL_BOOKS)
-  const filteredBooksResult = useQuery(ALL_BOOKS)
+  const [getFilteredBooks, filteredBooksResult] = useLazyQuery(ALL_BOOKS)
   const [filter, setFilter] = useState(null)
 
   useEffect(() => {
-    filteredBooksResult.refetch({ genre: filter })
+    getFilteredBooks({ variables: { genre: filter } })
   }, [filter]) //eslint-disable-line
 
-  if (allBooksResult.loading) return <div>loading...</div>
+  if (allBooksResult.loading || filteredBooksResult.loading)
+    return <div>loading...</div>
 
   if (!props.show) {
     return null
   }
 
   const allBooks = allBooksResult.data.allBooks
+  const filteredBooks = filteredBooksResult.data.allBooks
+
   const allGenres = new Set()
   allBooks.forEach(book =>
     book.genres.forEach(genre => {
@@ -25,7 +28,6 @@ const Books = props => {
     })
   )
 
-  const filteredBooks = filteredBooksResult.data.allBooks
   return (
     <div>
       <h2>books</h2>
