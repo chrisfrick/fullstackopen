@@ -4,12 +4,11 @@ import { ALL_BOOKS } from '../queries'
 
 const Books = props => {
   const allBooksResult = useQuery(ALL_BOOKS)
-  const [getFilteredBooks, filteredBooksResult] = useLazyQuery(ALL_BOOKS)
-  const [filter, setFilter] = useState(null)
-
-  useEffect(() => {
-    getFilteredBooks({ variables: { genre: filter } })
-  }, [filter]) //eslint-disable-line
+  const filteredBooksResult = useQuery(ALL_BOOKS, {
+    variables: {
+      genre: props.filter,
+    },
+  })
 
   if (allBooksResult.loading || filteredBooksResult.loading)
     return <div>loading...</div>
@@ -31,9 +30,9 @@ const Books = props => {
   return (
     <div>
       <h2>books</h2>
-      {filter ? (
+      {props.filter ? (
         <div>
-          in genre <b>{filter}</b>
+          in genre <b>{props.filter}</b>
         </div>
       ) : (
         <div>
@@ -58,11 +57,11 @@ const Books = props => {
         </tbody>
       </table>
       {[...allGenres].map(genre => (
-        <button key={genre} onClick={() => setFilter(genre)}>
+        <button key={genre} onClick={() => props.setFilter(genre)}>
           {genre}
         </button>
       ))}
-      <button onClick={() => setFilter(null)}>all genres</button>
+      <button onClick={() => props.setFilter(null)}>all genres</button>
     </div>
   )
 }

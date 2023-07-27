@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useApolloClient, useSubscription } from '@apollo/client'
-import { BOOK_ADDED } from './queries'
+import { BOOK_ADDED, ALL_BOOKS } from './queries'
 import LoginForm from './components/LoginForm'
 import Authors from './components/Authors'
 import Books from './components/Books'
@@ -10,11 +10,28 @@ import Recommended from './components/Recommended'
 const App = () => {
   const [token, setToken] = useState(null)
   const [page, setPage] = useState('authors')
+  const [filter, setFilter] = useState(null)
   const client = useApolloClient()
 
   useSubscription(BOOK_ADDED, {
     onData: ({ data }) => {
-      window.alert(`A new book ${data.data.bookAdded.title} was added!`)
+      const addedBook = data.data.bookAdded
+      window.alert(`A new book ${addedBook.title} was added!`)
+
+      client.cache.updateQuery(
+        { query: ALL_BOOKS, variables: { genre: filter } },
+        ({ allBooks }) => {
+          return {
+            allBooks: allBooks.concat(addedBook),
+          }
+        }
+      )
+
+      client.cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
+        return {
+          allBooks: allBooks.concat(addedBook),
+        }
+      })
     },
   })
   const logout = () => {
@@ -41,7 +58,7 @@ const App = () => {
 
       <Authors show={page === 'authors'} token={token} />
 
-      <Books show={page === 'books'} />
+      <Books show={page === 'books'} filter={filter} setFilter={setFilter} />
 
       <NewBook show={page === 'add'} setPage={setPage} />
 
