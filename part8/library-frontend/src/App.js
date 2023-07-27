@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { useApolloClient } from '@apollo/client'
+import { useApolloClient, useSubscription } from '@apollo/client'
+import { BOOK_ADDED } from './queries'
 import LoginForm from './components/LoginForm'
 import Authors from './components/Authors'
 import Books from './components/Books'
@@ -11,6 +12,11 @@ const App = () => {
   const [page, setPage] = useState('authors')
   const client = useApolloClient()
 
+  useSubscription(BOOK_ADDED, {
+    onData: ({ data }) => {
+      window.alert(`A new book ${data.data.bookAdded.title} was added!`)
+    },
+  })
   const logout = () => {
     setToken(null)
     localStorage.clear()
