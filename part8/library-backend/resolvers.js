@@ -18,17 +18,32 @@ const resolvers = {
 
       return Book.find({ genres: args.genre }).populate('author')
     },
-    allAuthors: async () => Author.find({}),
+    allAuthors: async () => {
+      // lean() makes books just a JS object, not a Mongoose Document object
+      let books = await Book.find({}).populate('author').lean()
+
+      // create authors array
+      let authors = books.reduce((authorList, book) => {
+        return authorList.find(author => author.name === book.author.name)
+          ? authorList
+          : [...authorList, book.author]
+      }, [])
+
+      // add in the book count
+      let authorsWithBookcount = authors.map(author => {
+        return {
+          ...author,
+          bookCount: books.filter(b => b.author.name === author.name).length,
+        }
+      })
+
+      return authorsWithBookcount
+    },
     me: (root, args, context) => {
       return context.currentUser
     },
   },
-  Author: {
-    bookCount: async root => {
-      authorsBooks = await Book.find({ author: root })
-      return authorsBooks.length
-    },
-  },
+
   Mutation: {
     addBook: async (root, args, context) => {
       const currentUser = context.currentUser

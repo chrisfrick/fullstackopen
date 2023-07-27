@@ -24,7 +24,6 @@ export const ALL_AUTHORS = gql`
       name
       born
       bookCount
-      id
     }
   }
 `
@@ -68,7 +67,6 @@ export const EDIT_BIRTH_YEAR = gql`
       name
       born
       bookCount
-      id
     }
   }
 `
